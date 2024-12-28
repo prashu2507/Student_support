@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Support Chatbot</title>
+  <style>
+    /* General Body Styles */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f1f3f6;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      height: 100vh;
+    }
+
+    /* Sidebar Styles */
+    .sidebar {
+      width: 20%;
+      background-color: #007bff;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      padding: 10px 0;
+    }
+
+    .sidebar .logo {
+      text-align: center;
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      font-weight: bold;
+    }
+
+    .sidebar .menu {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .sidebar .menu li {
+      padding: 15px 20px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .sidebar .menu li:hover {
+      background-color: #0056b3;
+    }
+
+    .sidebar .menu li.active {
+      background-color: #0056b3;
+    }
+
+    /* Main Content */
+    .main-content {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+    .header {
+      padding: 15px;
+      background-color: #fff;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+
+    /* Content Sections (Initially Hidden) */
+    .content-section {
+      display: none;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .content-section.active {
+      display: block;
+    }
+
+    /* Chat Section */
+    .chat-section {
+      display: flex;
+      flex-grow: 1;
+      gap: 20px;
+    }
+
+    /* Chat List */
+    .chat-list {
+      width: 30%;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      padding: 10px;
+      overflow-y: auto;
+    }
+
+    .chat-list-item {
+      padding: 10px;
+      border-bottom: 1px solid #f1f3f6;
+      cursor: pointer;
+    }
+
+    .chat-list-item:hover {
+      background-color: #f1f3f6;
+    }
+
+    /* Chat Container */
+    .chat-container {
+      flex-grow: 1;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+    }
+
+    .messages {
+      flex-grow: 1;
+      overflow-y: auto;
+      margin-bottom: 10px;
+      padding: 10px;
+      border: 1px solid #f1f3f6;
+      border-radius: 10px;
+      background-color: #f9f9f9;
+    }
+
+    .user-message,
+    .bot-message {
+      margin: 10px 0;
+    }
+
+    .user-message .message-text {
+      background-color: #007bff;
+      color: white;
+      padding: 10px;
+      border-radius: 10px;
+      align-self: flex-end;
+    }
+
+    .bot-message .message-text {
+      background-color: #e6e6e6;
+      color: #333;
+      padding: 10px;
+      border-radius: 10px;
+    }
+
+    /* Input Section */
+    .input-container {
+      display: flex;
+      margin-top: 10px;
+    }
+
+    .input-container input {
+      flex-grow: 1;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+    }
+
+    .input-container button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      margin-left: 10px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .input-container button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="sidebar">
+    <div class="logo">AI CallBot</div>
+    <ul class="menu">
+      <li id="dashboard-tab" class="active" onclick="showContent('dashboard')">Dashboard</li>
+      <li id="conversations-tab" onclick="showContent('conversations')">Conversations</li>
+      <li id="analytics-tab" onclick="showContent('analytics')">Analytics</li>
+      <li id="settings-tab" onclick="showContent('settings')">Settings</li>
+    </ul>
+  </div>
+
+  <div class="main-content">
+    <div class="header">
+      <h1>Student Support Chatbot</h1>
+    </div>
+
+    <!-- Content Sections -->
+    <div id="dashboard" class="content-section active">
+      <h2>Welcome to your Dashboard</h2>
+      <p>Here you can track your progress, view assignments, exams, and more!</p>
+    </div>
+
+    <div id="conversations" class="content-section">
+      <div class="chat-section">
+        <div class="chat-list">
+          <div class="chat-list-item">John Smith</div>
+          <div class="chat-list-item">Sarah Johnson</div>
+          <div class="chat-list-item">Mike Wilson</div>
+        </div>
+        <div class="chat-container">
+          <div class="messages" id="messages"></div>
+          <div class="input-container">
+            <input type="text" id="user_input" placeholder="Type your message..." />
+            <button onclick="sendMessage()">Send</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="analytics" class="content-section">
+      <h2>Analytics</h2>
+      <p>Here you can see your performance metrics such as assignments, exams, etc.</p>
+    </div>
+    <div id="analytics-content">
+      <h2>Analytics</h2>
+      <p>Here you can see your performance metrics such as assignments, exams, etc.</p>
+    
+      <!-- Chart.js Daily Usage Graph -->
+      <div class="chart-container">
+        <canvas id="usageChart"></canvas>
+      </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+      // Ensure this script runs after the canvas element is fully loaded
+      window.onload = function () {
+        const usageData = {
+          labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          datasets: [{
+            label: 'Daily Usage',
+            data: [12, 19, 3, 5, 2, 3, 9], // Example data, you can update it dynamically
+            borderColor: '#007bff',
+            backgroundColor: 'rgba(0, 123, 255, 0.2)',
+            borderWidth: 2,
+            fill: true,
+          }]
+        };
+    
+        const ctx = document.getElementById('usageChart').getContext('2d');
+        const usageChart = new Chart(ctx, {
+          type: 'line',
+          data: usageData,
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              x: {
+                beginAtZero: true
+              },
+              y: {
+                beginAtZero: true
+              }
+            }
+          }
+        });
+      }
+    </script>
+     <!-- Chart.js Daily Usage Graph -->
+     <div class="chart-container">
+        <canvas id="usageChart"></canvas>
+      </div>
+    </div>
+    <div id="settings" class="content-section">
+      <h2>Settings</h2>
+      <p>Adjust your preferences, notifications, and other settings here.</p>
+    </div>
+  </div>
+  <script>
+    function showContent(contentId) {
+      const sections = document.querySelectorAll('.content-section');
+      sections.forEach(section => {
+        section.classList.remove('active');
+      });
+      const activeSection = document.getElementById(contentId);
+      activeSection.classList.add('active');
+  
+      const tabs = document.querySelectorAll('.menu li');
+      tabs.forEach(tab => {
+        tab.classList.remove('active');
+      });
+      document.getElementById(contentId + '-tab').classList.add('active');
+    }
+  
+    function loadAnalytics() {
+      fetch('analytics.html')
+        .then(response => response.text())
+        .then(data => {
+          document.getElementById('analytics').innerHTML = data;
+        })
+        .catch(error => {
+          console.error('Error loading analytics:', error);
+          document.getElementById('analytics').innerHTML = '<p>Failed to load analytics content.</p>';
+        });
+    }
+    
+  </script>
+  <script>
+    // Function to show the selected content and hide others
+    function showContent(contentId) {
+      // Hide all content sections
+      const sections = document.querySelectorAll('.content-section');
+      sections.forEach(section => {
+        section.classList.remove('active');
+      });
+
+      // Show the selected content section
+      const activeSection = document.getElementById(contentId);
+      activeSection.classList.add('active');
+
+      // Update active tab in the sidebar
+      const tabs = document.querySelectorAll('.menu li');
+      tabs.forEach(tab => {
+        tab.classList.remove('active');
+      });
+
+      document.getElementById(contentId + '-tab').classList.add('active');
+    }
+
+    async function sendMessage() {
+      const input = document.getElementById('user_input').value;
+      if (!input) return;
+
+      const messages = document.getElementById('messages');
+      const userMessage = document.createElement('div');
+      userMessage.classList.add('user-message');
+      userMessage.innerHTML = `<div class="message-text">${input}</div>`;
+      messages.appendChild(userMessage);
+
+      // Clear input field
+      document.getElementById('user_input').value = '';
+      messages.scrollTop = messages.scrollHeight;
+
+      try {
+        // Send the message to backend (Flask API)
+        const response = await fetch('http://localhost:5000/chat', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ message: input })
+        });
+
+        const data = await response.json();
+        const botMessage = document.createElement('div');
+        botMessage.classList.add('bot-message');
+        botMessage.innerHTML = `<div class="message-text">${data.response}</div>`;
+        messages.appendChild(botMessage);
+        messages.scrollTop = messages.scrollHeight;
+      } catch (error) {
+        console.error('Error:', error);
+        // Handle error gracefully
+        const botMessage = document.createElement('div');
+        botMessage.classList.add('bot-message');
+        botMessage.innerHTML = `<div class="message-text">Sorry, there was an issue with the server.</div>`;
+        messages.appendChild(botMessage);
+        messages.scrollTop = messages.scrollHeight;
+      }
+    }
+
+    // Optional: Allow user to press 'Enter' to send message
+    document.getElementById('user_input').addEventListener('keypress', function(event) {
+      if (event.key === 'Enter') {
+        sendMessage();
+      }
+    });
+  </script>
+
+</body>
+</html>
