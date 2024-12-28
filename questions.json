@@ -1,0 +1,38 @@
+{
+  "assignments": [
+    "Tell me about my assignments",
+    "What are my upcoming assignments?",
+    "Do I have any assignments due soon?",
+    "Can you list my assignments?",
+    "What are my pending assignments?",
+    "Are there any assignments I need to submit?",
+    "Show me the assignment deadlines",
+    "What assignments are due this week?",
+    "Can you remind me about my assignments?",
+    "Do I have any homework to complete?"
+  ],
+  "exams": [
+    "When are my upcoming exams?",
+    "Tell me about my exams",
+    "Do I have any exams scheduled?",
+    "Can you list my exam dates?",
+    "What are the details of my next exams?",
+    "When is my next exam?",
+    "Show me my exam timetable",
+    "Are there any exams this week?",
+    "Tell me about my exam preparation schedule",
+    "What exams do I need to prepare for?"
+  ],
+  "notifications": [
+    "What reminders do I have?",
+    "Tell me about my deadlines",
+    "Are there any notifications for me?",
+    "Do I have any pending tasks?",
+    "Show me my upcoming reminders",
+    "What should I prepare for this week?",
+    "Do I have any important deadlines?",
+    "Can you notify me about upcoming tasks?",
+    "What events are scheduled for me?",
+    "Can you summarize my notifications?"
+  ]
+}
